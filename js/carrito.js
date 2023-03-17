@@ -71,6 +71,7 @@ const pintarCarrito =() => {
 
     botonfinalizarcompra.addEventListener("click", finalizarcompra)
 
+    // accion al finalizar compra
     function finalizarcompra(){
         Swal.fire({
             title: `Esta seguro de realizar la compra`,
@@ -93,6 +94,7 @@ const pintarCarrito =() => {
 }
 verCarrito.addEventListener("click", pintarCarrito)
 
+// eliminar producto con boton
 const eliminarProducto = () => {
     const foundId = carrito.find((Element) => Element.id)
 
@@ -104,14 +106,14 @@ const eliminarProducto = () => {
     pintarCarrito()
 }
 
+// eliminar carrito al finalizar
 const eliminarTodo = () => {
     carrito.forEach(Element => {
         const foundId = carrito.find((Element) => Element.id)
 
-    carrito = carrito.filter((carritoId) => {
-        return carritoId !== foundId
-    })
-        
+        carrito = carrito.filter((carritoId) => {
+            return carritoId !== foundId
+        })
     }) 
     
     carritoCounter()

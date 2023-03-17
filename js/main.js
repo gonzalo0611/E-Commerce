@@ -6,10 +6,12 @@ const cantidadCarrito = document.getElementById("cantidadCarrito")
 
 let carrito =  JSON.parse(localStorage.getItem("carrito")) || []
 
+
+// cambiando productos.js a productos.json
+
 const getProducts = async ()=> {
     const response = await fetch ("productos.json")
     const data = await response.json()
-    // console.log(data)
 
     data.forEach((product) => {
         let content = document.createElement("div")
