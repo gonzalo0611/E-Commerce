@@ -4,72 +4,72 @@ const modalContainer = document.getElementById("modal-Container")
 const bodyContent = document.getElementById("bodyContent")
 const cantidadCarrito = document.getElementById("cantidadCarrito")
 
-
 let carrito =  JSON.parse(localStorage.getItem("carrito")) || []
 
+const getProducts = async ()=> {
+    const response = await fetch ("productos.json")
+    const data = await response.json()
+    // console.log(data)
 
-let usuario = prompt("Ingrese su nombre")
-
-let seleccion = prompt(`Bienvenido ${usuario} desea comprar algun producto en la tienda si o no`)
-
-while(seleccion !="si" && seleccion !="no"){
-    alert("por favor ingrese si o no")
-    seleccion = prompt("Hola desea comprar algun producto si o no")
-}if(seleccion == "si"){
-    alert("Se mostrara la tienda")
-}else if(seleccion == "no"){
-    alert(`Gracias por su visita ${usuario}`)
-    bodyContent.style.display = "none"
-}
-
-
-productos.forEach((product) => {
-    let content = document.createElement("div")
-    content.className = "card"
-    content.innerHTML = 
-                        `
-                        <img src="${product.img}">
-                        <h3> ${product.nombre}
-                        <p class="price">$${product.precio}</p>
-                        `
-    shopContent.append(content)
-
-    let comprar = document.createElement("button")
-    comprar.innerText = "Comprar"
-    comprar.className = "comprar"
-    comprar.id = "buttoncomprar"
-
-    content.append(comprar)
-
-
-    comprar.addEventListener("click", () =>{
-
-    const repeat = carrito.some((repeatProduct) => repeatProduct.id === product.id)
-
-    if(repeat){
-        carrito.map((prod) => {
-            if(prod.id === product.id){
-                prod.cantidad++
-            }
-        })
-    }else {
-            carrito.push({
-                id: product.id,
-                img: product.img,
-                nombre: product.nombre,
-                precio: product.precio,
-                cantidad: product.cantidad
+    data.forEach((product) => {
+        let content = document.createElement("div")
+        content.className = "card"
+        content.innerHTML = 
+                            `
+                            <img src="${product.img}">
+                            <h3> ${product.nombre}
+                            <p class="price">$${product.precio}</p>
+                            `
+        shopContent.append(content)
+    
+        let comprar = document.createElement("button")
+        comprar.innerText = "Comprar"
+        comprar.className = "comprar"
+        comprar.id = "buttoncomprar"
+    
+        content.append(comprar)
+    
+        comprar.addEventListener("click", () =>{
+    
+        const repeat = carrito.some((repeatProduct) => repeatProduct.id === product.id)
+    
+        if(repeat){
+            carrito.map((prod) => {
+                if(prod.id === product.id){
+                    prod.cantidad++
+                }
             })
-        }   
-        carritoCounter()
-        saveLocal()
+        }else {
+                carrito.push({
+                    id: product.id,
+                    img: product.img,
+                    nombre: product.nombre,
+                    precio: product.precio,
+                    cantidad: product.cantidad
+                })
+            }   
+            carritoCounter()
+            saveLocal()
+            function agregarcompra(){
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Se agrego al carrito',
+                    showConfirmButton: false,
+                    timer: 1000,
+                    width: `25%`,
+                    backdrop: false
+                })
+            }
+            agregarcompra()
+        })
     })
-})
-
+}
+getProducts()
 
 // storage
 const saveLocal = () => {
 localStorage.setItem("carrito", JSON.stringify(carrito))
 }
-
 JSON.parse(localStorage.getItem("carrito"))
+

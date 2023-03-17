@@ -31,31 +31,28 @@ const pintarCarrito =() => {
                                     <span class="sumar"> + </span>
                                     <p> Total: ${product.cantidad*product.precio}</p>
                                     `
-    modalContainer.append(carritoContent)
+        modalContainer.append(carritoContent)
 
+        let restar = carritoContent.querySelector(".restar")
+        restar.addEventListener("click", () =>{
+            product.cantidad--
+            pintarCarrito()
+            saveLocal()
+        })
 
-    let restar = carritoContent.querySelector(".restar")
-    restar.addEventListener("click", () =>{
-        if(product.cantidad !==1){
-        product.cantidad--}
-        pintarCarrito()
-        saveLocal()
-    })
+        let sumar = carritoContent.querySelector(".sumar")
+        sumar.addEventListener("click", () =>{
+            product.cantidad++
+            pintarCarrito()
+            saveLocal()
+        })
 
-    let sumar = carritoContent.querySelector(".sumar")
-    sumar.addEventListener("click", () =>{
-        if(product.cantidad !==1){
-        product.cantidad++}
-        pintarCarrito()
-        savelocar()
-    })
+        let eliminar = document.createElement("span")
+        eliminar.innerText = "X"
+        eliminar.className = "delete-product"
+        carritoContent.append(eliminar)
 
-    let eliminar = document.createElement("span")
-    eliminar.innerText = "X"
-    eliminar.className = "delete-product"
-    carritoContent.append(eliminar)
-
-    eliminar.addEventListener("click", eliminarProducto)
+        eliminar.addEventListener("click", eliminarProducto)
 
     })
 
@@ -68,7 +65,6 @@ const pintarCarrito =() => {
     const botonfinalizarcompra = document.createElement("div")
     botonfinalizarcompra.innerText= "Finalizar Compra"
     botonfinalizarcompra.className= "finaliar-compra"
-
 
     modalContainer.append(totalBuying)
     totalBuying.append(botonfinalizarcompra)
@@ -83,16 +79,19 @@ const pintarCarrito =() => {
             confirmButtonText: `Si, estoy seguro`,
             confirmButtonColor: `green`,
             cancelButtonColor: `red`
-        })
+        }).then((result) => {
+            if (result.isConfirmed){
+            Swal.fire({
+                title: `Gracias por su compra`,
+                text: `El total a pagar es de $${total}`,
+                icon: `success`
+            })
+            eliminarTodo()
+            localStorage.clear();
+        }})
     }
 }
-
-function finalizarcompra(){
-    console.log("funciona")
-}
-
 verCarrito.addEventListener("click", pintarCarrito)
-
 
 const eliminarProducto = () => {
     const foundId = carrito.find((Element) => Element.id)
@@ -105,17 +104,28 @@ const eliminarProducto = () => {
     pintarCarrito()
 }
 
+const eliminarTodo = () => {
+    carrito.forEach(Element => {
+        const foundId = carrito.find((Element) => Element.id)
+
+    carrito = carrito.filter((carritoId) => {
+        return carritoId !== foundId
+    })
+        
+    }) 
+    
+    carritoCounter()
+    saveLocal()
+    pintarCarrito()
+}
+
 const carritoCounter = () => {
     cantidadCarrito.style.display = "block"
-
     const carritoLength = carrito.length
-
     localStorage.setItem("carritoLength", JSON.stringify(carritoLength))
 
     cantidadCarrito.innerText = JSON.parse(localStorage.getItem("carritoLength"))
 
     cantidadCarrito.innerText = carrito.length
-
 }
-
 carritoCounter()
